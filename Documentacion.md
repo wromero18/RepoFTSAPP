@@ -76,4 +76,47 @@ Se probó renombrar sin escribir nombre → acción cancelada.
 
 Se verificó que los archivos temporales subidos se eliminaron correctamente (fs.unlink).
 
+Tambien se realizo la Prueba de ver que pasa si Apagamos el servidor TLS y ver qué errores aparecen al operar.
+(es decir, simular una falla del backend para observar el manejo de errores.)
+
+Pasos realizados:
+1. Inicio normal:
+
+Se arrancaron secure-server.js y web-server.js.
+
+Se accedió a la UI normalmente desde https://localhost:3000.
+
+Se confirmó que la lista de archivos se mostraba correctamente (GET /api/files funcionando).
+
+2. Simulación de fallo:
+
+Se cerró manualmente el proceso del secure-server.js, dejando solo el web-server.js corriendo.
+
+Sin recargar la página, se intentaron las siguientes acciones desde la UI:
+
+Volver a listar archivos
+
+Subir un archivo nuevo
+
+Descargar un archivo existente
+
+3. Observaciones desde la interfaz:
+
+Al listar archivos: mensaje en tabla → “Error al cargar archivos. Intente de nuevo.”
+
+Al subir archivo: apareció alerta con mensaje de error personalizado.
+
+Al descargar archivo: ventana no se abrió o devolvió error de red.
+
+El navegador no se bloqueó; la UI permaneció operativa, pero sin poder conectarse al backend.
+
+Resultado esperado:
+El sistema detecta la desconexión del servidor TLS y muestra mensajes de error claros al usuario.
+
+Las acciones fallidas no afectan la estabilidad del navegador ni del web server.
+
+Se validó que el manejo de errores en web-server.js con try/catch y respuestas res.status(500) funciona correctamente.
+   
+
+
 
